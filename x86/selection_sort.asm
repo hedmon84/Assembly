@@ -1,5 +1,8 @@
 
 call main
+
+#show ["regrese"] ascii
+#show [10] ascii
 #stop
 
 
@@ -28,7 +31,7 @@ cmp ecx, dword[esp+8]   ;i < n
 jge end_loop  
 
 
-mov ebx ,dword[ebp+ecx*4] 
+mov ebx ,dword[ebp+ecx*4]  ;arreglo[i]
 
 #show dword[ebp+eax*4]
 #show ebx
@@ -40,14 +43,12 @@ cmp dword[ebp+eax*4],ebx  ;arreglo[min] > arreglo[i]
 jge equalize
 
 inc ecx          ;i++
-#show ecx
+;#show ecx
 jmp as_for
 
 
 equalize:
-#show ecx
-
-
+;#show ecx
 mov eax,ecx               ;min = i
 #show eax
 inc ecx                    ;i++
@@ -71,7 +72,6 @@ selection_sort:
 ;#show dword[ebp] [3]
 #show[10] ascii 
 #show["esp"] ascii
-#show dword[esp] [6]
 
 cmp dword[esp+8],1       ;if (n>1)
 je end_sort   
@@ -89,9 +89,9 @@ call get_min               ; get_min func
 
 
 #show[10] ascii 
-#show dword[esp] [8]
+#show dword[esp] [8] 
 #show[10] ascii 
-add esp,8
+add esp,8       ;restore stack
 
 #show[10] ascii 
 #show dword[esp] [6]
@@ -126,11 +126,9 @@ dec dword[esp+8]            ;n-1
 #show[10] ascii 
 #show dword[esp] [6]
 
-
 lea   esi,dword[ebp+4]     ;&arreglo[1]
 #show[10] ascii 
 #show esi
-
 
 mov dword[esp+4],esi
 
@@ -154,7 +152,7 @@ ret
 
 main:
 
-sub esp,48
+sub esp,52
 mov dword[esp],100
 mov dword[esp+4],2
 mov dword[esp+8],67
@@ -169,11 +167,13 @@ mov dword[esp+40],294
 mov dword[esp+44],193
 mov dword[esp+48],351
 
+
 mov ebp,esp
 #show ebp
 push 13
-
 push ebp
+
+
 #show esp
 
 #show dword[ebp] [3]
@@ -185,5 +185,5 @@ add esp,8
 #show[10] ascii
 #show dword[esp] [13]   ; show  sorted array
 
-add esp,48
+add esp,52
 ret
