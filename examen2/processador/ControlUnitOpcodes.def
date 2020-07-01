@@ -1,0 +1,109 @@
+alias begin
+    // MIPS opcodes
+    MIPS_SPECIAL = 0x00,
+    MIPS_J       = 0x02,
+    MIPS_BEQ     = 0x04,
+    MIPS_LW      = 0x23,
+    MIPS_SW      = 0x2b,
+    MIPS_XORI    = 0xe,
+    MIPS_ADDI    = 0x8,
+    MIPS_LUI     = 0xf,
+    MIPS_JAL     = 0xb,
+
+
+    // MIPS functions
+    MIPS_ADD    = 0x20,
+    MIPS_SUB    = 0x22,
+    MIPS_AND    = 0x24,
+    MIPS_OR     = 0x25,
+    MIPS_SLT    = 0x2a,
+    MIPS_ORI    = 0xd,
+    MIPS_XOR    = 0x26,
+    
+    //ALU functions
+    ALU_ADD = 0,
+    ALU_SUB = 1,
+    ALU_AND = 2,
+    ALU_OR  = 3,
+    ALU_LT  = 4,
+    ALU_XOR = 5,
+   
+end
+
+/*
+ * [5:0] defines the number of entries in the output file.
+ * In this case 2^6 = 64 entries
+ */
+module opcode_signals [5:0]
+begin
+    output_header "v2.0 raw"; // This header is required by Digital
+    output_file "opc_signals.hex"; // The output file
+    input_file "opc_signals_default.hex"; // The input file
+    
+    /*
+     * The signal declaration define its position.
+     * In this case Jump signal will be at position 0, Jal at position 1,
+     * Branch at position 2, MemRead at position 3, and so on.
+     */
+    signals begin
+        Jump,
+        Jal,
+        Branch,
+        MemRead,
+        MemWrite,
+        MemToReg[1:0],
+        ALUSrc,
+        RegWrite,
+        RegDst[1:0],
+        ALUOp,
+        Extend,
+        InvalidOpcode,
+        ALUFunct[2:0]
+    end
+
+    data begin
+        default: begin
+            Jump = 0,
+            Jal = 0,
+            Branch = 0,
+            MemRead = 0,
+            MemWrite = 0,
+            MemToReg = 0,
+            ALUSrc = 0,
+            RegWrite = 0,
+            RegDst = 0,
+            ALUOp = 0,
+            Extend = 0,
+            InvalidOpcode = 1,
+            ALUFunct = 0
+        end
+     MIPS_ADDI: begin
+            ALUSrc = 1,
+            RegWrite = 1,
+            InvalidOpcode = 0,
+            ALUFunct = ALU_ADD,
+            Extend = 1
+            
+        end 
+
+         MIPS_XORI:begin
+            ALUSrc = 1,
+            RegWrite = 1,
+            InvalidOpcode = 0,
+            ALUFunct = ALU_XOR,
+            Extend = 1
+        end   
+
+        MIPS_LUI: begin
+            ALUSrc = 1,
+            RegWrite = 1,
+            InvalidOpcode = 0,
+            ALUFunct = ALU_ADD,
+            Extend = 1,
+        end
+        MIPS_JAL: begin
+            InvalidOpcode = 0,
+            Jal = 1
+        end
+    end 
+end

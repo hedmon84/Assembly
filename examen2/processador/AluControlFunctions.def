@@ -1,0 +1,64 @@
+alias begin
+    // MIPS opcodes
+    MIPS_SPECIAL = 0x00,
+    MIPS_J       = 0x02,
+    MIPS_BEQ     = 0x04,
+    MIPS_LW      = 0x23,
+    MIPS_SW      = 0x2b,
+
+    // MIPS functions
+    MIPS_ADD    = 0x20,
+    MIPS_SUB    = 0x22,
+    MIPS_AND    = 0x24,
+    MIPS_OR     = 0x25,
+    MIPS_SLT    = 0x2a,
+    MIPS_XOR     = 0x26,
+    
+    //ALU functions
+    ALU_ADD = 0,
+    ALU_SUB = 1,
+    ALU_AND = 2,
+    ALU_OR  = 3,
+    ALU_LT  = 4,
+end
+
+module function_signals [5:0]
+begin
+    output_header "v2.0 raw";
+    output_file "func_signals.hex";
+    input_file "func_signals_default.hex";
+
+    signals begin
+        ALUFunct [2:0]
+    end
+
+    data begin
+        // default option is required
+        default: begin
+            ALUFunct = ALU_ADD
+        end
+        MIPS_ADD: begin
+           ALUFunct = 0
+        end
+
+        MIPS_SUB: begin
+            ALUFunct = 1
+        end
+
+        MIPS_AND: begin
+            ALUFunct = 2
+        end
+
+        MIPS_OR: begin
+            ALUFunct = 3
+        end
+
+        MIPS_SLT: begin
+            ALUFunct = 4
+        end
+        MIPS_XOR: begin
+            ALUFunct = 5
+        end
+
+    end
+end
